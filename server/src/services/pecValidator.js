@@ -49,3 +49,4 @@ export function validatePecEligibility(estimatedValuePKR, requiredCodes = []) {
     pecCategory: THARCON_PEC_PROFILE.category
   };
 }
+

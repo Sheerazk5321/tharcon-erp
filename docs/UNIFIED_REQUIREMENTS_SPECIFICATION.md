@@ -115,3 +115,4 @@
 - **FR-45 (Role-Based Access Control)**: 9 distinct roles with granular module-level permissions.
 - **FR-46 (Immutable Audit Log)**: Complete audit trail of all financial, contract, and measurement entries.
 - **FR-47 (Beneficiary PII Encryption)**: Encryption of all beneficiary household PII in compliance with humanitarian donor data policies.
+
