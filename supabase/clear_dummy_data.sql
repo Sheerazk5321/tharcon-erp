@@ -28,3 +28,4 @@ UNION ALL SELECT 'machinery_fleet', COUNT(*) FROM machinery_fleet
 UNION ALL SELECT 'projects', COUNT(*) FROM projects
 UNION ALL SELECT 'tenders', COUNT(*) FROM tenders
 UNION ALL SELECT 'bank_accounts', COUNT(*) FROM bank_accounts;
+
