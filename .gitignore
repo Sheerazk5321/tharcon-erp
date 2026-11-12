@@ -40,3 +40,5 @@ Thumbs.db
 extracted_*.txt
 __pycache__/
 *.py[cod]
+~$*.docx
+~$*.xlsx

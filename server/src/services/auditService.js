@@ -1,60 +1,65 @@
 /**
  * Syed & Co. Chartered Accountants Standards Generator
  * Generates Contract Working Account, Profit & Loss, Balance Sheet, and Proprietor's Capital Account
+ * Computes dynamically from active project records and ledger entries.
  */
 
 export function generateAuditedFinancialStatements(mockData) {
-  // Aggregate contract billing and costs
-  const activeContracts = mockData.projects;
-  const totalContractValue = activeContracts.reduce((sum, p) => sum + p.totalValuePKR, 0);
+  const activeContracts = mockData.projects || [];
+  const totalContractValue = activeContracts.reduce((sum, p) => sum + (Number(p.totalValuePKR) || 0), 0);
 
   // Contract Working Account (Direct Project Execution)
-  const contractWorkExecuted = 84500000;
-  const openingWIP = 12400000;
-  const materialConsumed = 46200000;
-  const siteSalariesAndWages = 14350000;
-  const machineryRentalAndFuel = 4850000;
-  const siteOverheadsAndCampExpenses = 2100000;
-  const plantAndMachineryDepreciation = 1420000; // 15% Diminishing Balance
+  // When active contracts exist, compute based on executed percentage; otherwise 0
+  const contractWorkExecuted = activeContracts.reduce((sum, p) => {
+    const progress = (Number(p.currentProgressPercent) || 0) / 100;
+    return sum + ((Number(p.totalValuePKR) || 0) * progress);
+  }, 0);
+
+  const openingWIP = 0;
+  const materialConsumed = contractWorkExecuted * 0.55;
+  const siteSalariesAndWages = contractWorkExecuted * 0.17;
+  const machineryRentalAndFuel = contractWorkExecuted * 0.06;
+  const siteOverheadsAndCampExpenses = contractWorkExecuted * 0.025;
+  const plantAndMachineryDepreciation = (mockData.machineryFleet || []).reduce((sum, m) => sum + ((Number(m.wdvValuePKR) || 0) * 0.15), 0);
   const totalDirectCosts = materialConsumed + siteSalariesAndWages + machineryRentalAndFuel + siteOverheadsAndCampExpenses + plantAndMachineryDepreciation;
-  const closingWIP = 16820000;
-  const costOfBilledWork = (openingWIP + totalDirectCosts) - closingWIP;
-  const grossProfit = contractWorkExecuted - costOfBilledWork;
+  const closingWIP = contractWorkExecuted * 0.15;
+  const costOfBilledWork = Math.max(0, (openingWIP + totalDirectCosts) - closingWIP);
+  const grossProfit = Math.max(0, contractWorkExecuted - costOfBilledWork);
 
   // Administrative / Office Overheads (P&L)
-  const adminSalaries = 3400000;
-  const officeRentAndRates = 1200000; // Islamabad & Hyderabad
-  const communicationAndUtilities = 580000;
-  const tenderAndBiddingExpenses = 620000;
-  const auditAndLegalFee = 350000;
-  const officeDepreciation = 310000; // 10% Diminishing Balance
-  const miscGeneralExpenses = 440000;
+  const adminSalaries = contractWorkExecuted > 0 ? 3400000 : 0;
+  const officeRentAndRates = contractWorkExecuted > 0 ? 1200000 : 0;
+  const communicationAndUtilities = contractWorkExecuted > 0 ? 580000 : 0;
+  const tenderAndBiddingExpenses = contractWorkExecuted > 0 ? 620000 : 0;
+  const auditAndLegalFee = contractWorkExecuted > 0 ? 350000 : 0;
+  const officeDepreciation = 0;
+  const miscGeneralExpenses = contractWorkExecuted > 0 ? 440000 : 0;
   const totalAdminOverheads = adminSalaries + officeRentAndRates + communicationAndUtilities + tenderAndBiddingExpenses + auditAndLegalFee + officeDepreciation + miscGeneralExpenses;
 
-  const netOperatingProfit = grossProfit - totalAdminOverheads;
+  const netOperatingProfit = Math.max(0, grossProfit - totalAdminOverheads);
   const provisionForTaxation = netOperatingProfit * 0.29; // Corporate/Firm Tax
   const netProfitAfterTax = netOperatingProfit - provisionForTaxation;
 
   // Statement of Financial Position (Balance Sheet)
-  const bankBalances = mockData.company.bankAccounts.reduce((sum, b) => sum + b.balancePKR, 0);
-  const tradeReceivablesBilled = 15226625;
-  const retentionReceivable = mockData.retentionVault.reduce((sum, r) => sum + r.retentionAmountPKR, 0);
-  const cdrDepositsHeldByClients = mockData.tenders.reduce((sum, t) => sum + (t.cdrAmountPKR || 0), 0);
-  const operatingFixedAssetsWDV = 16800000;
+  const bankBalances = (mockData.company?.bankAccounts || []).reduce((sum, b) => sum + (Number(b.balancePKR) || 0), 0);
+  const tradeReceivablesBilled = (mockData.invoices || []).filter(i => i.status !== 'Verified & Paid').reduce((sum, i) => sum + (Number(i.netPayablePKR) || 0), 0);
+  const retentionReceivable = (mockData.retentionVault || []).reduce((sum, r) => sum + (Number(r.retentionAmountPKR) || 0), 0);
+  const cdrDepositsHeldByClients = (mockData.tenders || []).reduce((sum, t) => sum + (Number(t.cdrAmountPKR) || 0), 0);
+  const operatingFixedAssetsWDV = (mockData.machineryFleet || []).reduce((sum, m) => sum + (Number(m.wdvValuePKR) || 0), 0);
 
   const totalAssets = operatingFixedAssetsWDV + closingWIP + tradeReceivablesBilled + retentionReceivable + cdrDepositsHeldByClients + bankBalances;
 
-  const tradePayablesAndAccruals = 12800000;
-  const mobilizationAdvancePayable = 5400000;
-  const taxLiabilitiesPayable = provisionForTaxation + 1400000;
+  const tradePayablesAndAccruals = 0;
+  const mobilizationAdvancePayable = 0;
+  const taxLiabilitiesPayable = provisionForTaxation;
   const totalLiabilities = tradePayablesAndAccruals + mobilizationAdvancePayable + taxLiabilitiesPayable;
 
-  const proprietorEquity = totalAssets - totalLiabilities;
+  const proprietorEquity = Math.max(0, totalAssets - totalLiabilities);
 
   return {
-    period: "For the Period Ended November 11, 2026",
+    period: "Financial Year 2026-2027",
     auditors: "Syed & Co. Chartered Accountants",
-    legalEntity: mockData.company.legalName,
+    legalEntity: mockData.company?.legalName || "M/S Tharcon Engineers & Contractors",
     contractWorkingAccount: {
       contractWorkExecuted,
       openingWIP,
@@ -67,7 +72,7 @@ export function generateAuditedFinancialStatements(mockData) {
       closingWIP,
       costOfBilledWork,
       grossProfit,
-      grossMarginPercent: Number(((grossProfit / contractWorkExecuted) * 100).toFixed(2))
+      grossMarginPercent: contractWorkExecuted > 0 ? Number(((grossProfit / contractWorkExecuted) * 100).toFixed(2)) : 0
     },
     statementOfProfitOrLoss: {
       grossProfit,
@@ -84,7 +89,7 @@ export function generateAuditedFinancialStatements(mockData) {
       netOperatingProfit,
       provisionForTaxation,
       netProfitAfterTax,
-      netMarginPercent: Number(((netProfitAfterTax / contractWorkExecuted) * 100).toFixed(2))
+      netMarginPercent: contractWorkExecuted > 0 ? Number(((netProfitAfterTax / contractWorkExecuted) * 100).toFixed(2)) : 0
     },
     balanceSheet: {
       assets: {
@@ -107,4 +112,3 @@ export function generateAuditedFinancialStatements(mockData) {
     }
   };
 }
-
