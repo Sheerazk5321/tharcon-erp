@@ -11,3 +11,4 @@ export const isSupabaseConnected = Boolean(
 );
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
+

@@ -470,7 +470,7 @@ export const mockData = {
       farmStaffWages: 320000,
       utilitiesAndSecurity: 95000
     }
-  ],
+  },
 
   // NHA Hassanabdal Toll Plaza Shift Collections (Representative Recent Week)
   tollOperations: {

@@ -270,3 +270,4 @@ CREATE POLICY "Allow anon read for dev on units" ON beneficiary_household_units 
 CREATE POLICY "Allow anon read for dev on invoices" ON invoices FOR SELECT TO anon USING (true);
 CREATE POLICY "Allow anon read for dev on livestock" ON livestock_inventory FOR SELECT TO anon USING (true);
 CREATE POLICY "Allow anon read for dev on toll" ON toll_collections FOR SELECT TO anon USING (true);
+
