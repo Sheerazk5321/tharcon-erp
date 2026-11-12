@@ -55,7 +55,7 @@ INSERT INTO projects (
 ) VALUES
 ('PRJ-01', 'TND-2026-04', 'MAP-SH-47', '47 Resilient Smart Houses Construction', 'Muslim Aid Pakistan', 'MAP/MAUK/2026-23/26/5930-8', 'Civil & Humanitarian Shelter', 53982790, '2026-08-25', '2027-02-28', 68, 'Sindh', 'Mirpur Khas', ARRAY['Digri', 'Jhudo', 'Kot Ghulam Muhammad'], 25.5276, 69.0125, 'Engr. Masroor Ahmed', ARRAY['Waseem Ahmed', 'Iqbal Soomro'], 0.001, 10, 10, 90, 47, 28, 19, 'Active / In Progress'),
 ('PRJ-02', 'TND-2026-02', 'IHHN-INC-01', 'Incinerator & Yellow Room Complex', 'Indus Hospital & Health Network (IHHN)', 'IHHN/CW/INC-YR/2026/91', 'Civil, MEP & Healthcare Infrastructure', 68000000, '2026-09-15', '2027-04-30', 42, 'Sindh', 'Badin & Karachi', ARRAY['Matli', 'Korangi'], 24.8607, 67.0011, 'Engr. Masroor Ahmed', ARRAY['Farman Ali'], 0.001, 10, 5, 365, 2, 0, 2, 'Active / In Progress'),
-('PRJ-04', 'TND-2026-03', 'NHA-TOLL-N35', 'Hassanabdal Toll Plaza Operations (N-35)', 'National Highway Authority (NHA)', 'LOA 20(08) NHA/DD(R-C)/2025/54', 'Highway Toll Operations', 164436000, '2026-01-01', '2026-12-31', 91, 'Punjab / KPK Border', 'Attock / Rawalpindi', ARRAY['Hassanabdal'], 33.8214, 72.6892, 'Engr. Masab', ARRAY[], 0.001, 10, 0, 0, 0, 0, 0, 'Active Operational Vertical')
+('PRJ-04', 'TND-2026-03', 'NHA-TOLL-N35', 'Hassanabdal Toll Plaza Operations (N-35)', 'National Highway Authority (NHA)', 'LOA 20(08) NHA/DD(R-C)/2025/54', 'Highway Toll Operations', 164436000, '2026-01-01', '2026-12-31', 91, 'Punjab / KPK Border', 'Attock / Rawalpindi', ARRAY['Hassanabdal'], 33.8214, 72.6892, 'Engr. Masab', ARRAY[]::TEXT[], 0.001, 10, 0, 0, 0, 0, 0, 'Active Operational Vertical')
 ON CONFLICT (id) DO NOTHING;
 
 -- 5. Insert Khairpur Livestock Breeds
@@ -68,3 +68,4 @@ INSERT INTO livestock_inventory (species, breed, count, target_avg_weight_kg, he
 ('Goat', 'Kamori', 50, 45, 'Show / Prime', '2026-10-25', '2027-04-25'),
 ('Buffalo', 'Kundi / Nili-Ravi', 172, 450, 'Excellent', '2026-11-02', '2027-05-02'),
 ('Cow', 'Tharparkar Red Sindhi', 38, 380, 'Excellent', '2026-11-02', '2027-05-02');
+
