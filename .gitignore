@@ -7,9 +7,12 @@ node_modules/
 /coverage
 
 # Production & Build outputs
-/dist
-/build
+dist/
+**/dist/
+build/
+**/build/
 out/
+**/out/
 
 # Environment Variables
 .env
